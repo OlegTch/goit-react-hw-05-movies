@@ -1,0 +1,30 @@
+.link {
+  display: inline-block;
+  text-decoration: none;
+  padding: 12px;
+  font-weight: 500;
+  color: #2a363b;
+  font-size: 16px;
+}
+
+.activeLink {
+  /* composes: link; */
+  color: #2196f3;
+}
+
+.image {
+  display: block;
+  margin: 0 auto;
+}
+
+.list {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+.item {
+  padding-right: 10px;
+}
