@@ -8,9 +8,14 @@ import styles from './Cast.module.css';
 const Cast = () => {
   const { movieId } = useParams();
   const [movies, setMovies] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    MovieCastAPI.fetchMovieCast(movieId).then(setMovies);
+    MovieCastAPI.fetchMovieCast(movieId)
+      .then(setMovies)
+      .catch(error => {
+        setError(error);
+      });
   }, [movieId]);
 
   return (
@@ -38,6 +43,7 @@ const Cast = () => {
           ))}
         </ul>
       )}
+      {error && <p>Something wrong</p>}
     </>
   );
 };

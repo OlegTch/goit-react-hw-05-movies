@@ -1,28 +1,56 @@
-import { useState, useEffect } from 'react';
-import { NavLink, useParams, useRouteMatch, Route } from 'react-router-dom';
+import { useState, useEffect, lazy, Suspense } from 'react';
+import {
+  NavLink,
+  useParams,
+  useRouteMatch,
+  Route,
+  useLocation,
+  useHistory,
+} from 'react-router-dom';
 import * as MovieDetailsAPI from '../../services/movies-api';
 import PropTypes from 'prop-types';
 import noImageMovie from '../../images/noImageMovie.jpg';
-
-import Cast from '../Cast';
-import Reviews from '../Reviews';
-
+import Loader from '../Loader';
+// import Cast from '../Cast';
+// import Reviews from '../Reviews';
 import styles from './MovieDetailsPage.module.css';
+const Cast = lazy(() => import('../Cast' /*webpackChunkName: "Cast" */));
+const Reviews = lazy(() =>
+  import('../Reviews' /*webpackChunkName: "Reviews" */),
+);
 
 const MovieDetailsPage = () => {
+  const location = useLocation();
+  const history = useHistory();
   const { movieId } = useParams();
   const [movies, setMovies] = useState(null);
   const { url, path } = useRouteMatch();
+  const [error, setError] = useState(null);
   console.log('url', url);
   console.log('path', path);
+  console.log(location);
 
   useEffect(() => {
-    MovieDetailsAPI.fetchMovieDetails(movieId).then(setMovies);
+    MovieDetailsAPI.fetchMovieDetails(movieId)
+      .then(setMovies)
+      .catch(error => {
+        setError(error);
+      });
   }, [movieId]);
+
+  const onGoBack = () => {
+    history.push(location?.state?.from ?? `/`);
+    // history.push(location?.state?.from ?? `/movies`);
+
+    console.log(history);
+    console.log(location.state.from);
+  };
 
   return (
     <>
-      <button>GO BACK</button>
+      <button className={styles.button} type="button" onClick={onGoBack}>
+        GO BACK
+      </button>
       {movies && (
         <div className={styles.thumb}>
           <div className={styles.imageThumb}>
@@ -53,14 +81,21 @@ const MovieDetailsPage = () => {
           <hr />
           <p>Additional information</p>
           <NavLink
-            to={`${url}/cast`}
+            // to={`${url}/cast`}
+            to={{
+              pathname: `${url}/cast`,
+              state: { from: location?.state?.from ?? location },
+            }}
             className={styles.link}
             activeClassName={styles.activeLink}
           >
             Cast
           </NavLink>
           <NavLink
-            to={`${url}/reviews`}
+            to={{
+              pathname: `${url}/reviews`,
+              state: { from: location?.state?.from ?? location },
+            }}
             className={styles.link}
             activeClassName={styles.activeLink}
           >
@@ -68,13 +103,15 @@ const MovieDetailsPage = () => {
           </NavLink>
         </div>
       )}
-
-      <Route path={`${path}/cast`}>
-        <Cast movies={movies} movieId={movieId} />
-      </Route>
-      <Route path={`${path}/reviews`}>
-        <Reviews movies={movies} movieId={movieId} />
-      </Route>
+      <Suspense fallback={<Loader></Loader>}>
+        <Route path={`${path}/cast`}>
+          <Cast movies={movies} movieId={movieId} />
+        </Route>
+        <Route path={`${path}/reviews`}>
+          <Reviews movies={movies} movieId={movieId} />
+        </Route>
+      </Suspense>
+      {error && <p>Something wrong</p>}
     </>
   );
 };

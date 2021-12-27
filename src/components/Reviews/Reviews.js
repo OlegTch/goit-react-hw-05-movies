@@ -7,11 +7,16 @@ import styles from './Reviews.module.css';
 const Reviews = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    MovieReviewsAPI.fetchMovieReviews(movieId).then(data => {
-      setMovie(data.results);
-    });
+    MovieReviewsAPI.fetchMovieReviews(movieId)
+      .then(data => {
+        setMovie(data.results);
+      })
+      .catch(error => {
+        setError(error);
+      });
   }, [movieId]);
 
   return (
@@ -29,6 +34,7 @@ const Reviews = () => {
         ) : (
           <p>We don't have any reviews for this movie</p>
         ))}
+      {error && <p>Something wrong</p>}
     </>
   );
 };

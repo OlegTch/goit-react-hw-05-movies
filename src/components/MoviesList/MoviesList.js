@@ -2,14 +2,20 @@ import noImageMovie from '../../images/noImageMovie.jpg';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import styles from './MoviesList.module.css';
+// import { useLocation } from 'react-router-dom';
 
-const MoviesList = ({ movies }) => {
+const MoviesList = ({ movies, location, locationHome }) => {
   return (
     <ul className={styles.list}>
       {movies &&
         movies.map(({ id, title, poster_path, original_title }) => (
           <li className={styles.item} key={id}>
-            <Link to={`/movies/${id}`}>
+            <Link
+              to={{
+                pathname: `/movies/${id}`,
+                state: { from: location },
+              }}
+            >
               <img
                 src={
                   poster_path
@@ -35,6 +41,7 @@ MoviesList.propTypes = {
       original_title: PropTypes.string,
     }),
   ),
+  location: PropTypes.object,
 };
 
 export default MoviesList;

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +12,7 @@ import MoviesList from '../MoviesList/';
 import styles from './MoviesPage.module.css';
 
 const MoviesPage = () => {
+  const location = useLocation();
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -45,7 +47,7 @@ const MoviesPage = () => {
       <Searchbar onFormSubmit={handleFormSubmit} />
       <ToastContainer autoClose={2000} position="top-center" />
       {isLoading && <Loader />}
-      <MoviesList movies={movies} />
+      <MoviesList movies={movies} location={location} />
       {error && <p>Something wrong</p>}
     </>
   );
