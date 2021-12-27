@@ -1,11 +1,9 @@
-// import Navigation from './components/Navigation/Navigation';
 import { Switch, Route } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import HomePage from './components/HomePage';
 import MoviesPage from './components/MoviesPage';
 import MovieDetailsPage from './components/MovieDetailsPage';
-// import Cast from './components/Cast';
-// import Reviews from './components/Reviews';
+
 import './App.css';
 
 function App() {
@@ -23,17 +21,9 @@ function App() {
           <MoviesPage />
         </Route>
 
-        <Route path="/movies/:movieId" exact>
+        <Route path="/movies/:movieId">
           <MovieDetailsPage />
         </Route>
-
-        {/* <Route path="/movies/:movieId/cast">
-          <Cast />
-        </Route>
-
-        <Route path="/movies/:movieId/reviews">
-          <Reviews />
-        </Route> */}
 
         <Route>
           <HomePage />

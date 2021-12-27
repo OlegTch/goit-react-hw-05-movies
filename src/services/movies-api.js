@@ -20,6 +20,7 @@ export function fetchTrending() {
 }
 
 export function fetchMoviesSearch(query) {
+  console.log('query', query);
   return fetchMovies(`${BASE_URL}search/movie?api_key=${API_KEY}&language=en-US&page=1&include_adult=false&query=${query}
 `);
 }

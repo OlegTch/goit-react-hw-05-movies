@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as TrendingAPI from '../../services/movies-api';
-import { Link, useRouteMatch } from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import { useRouteMatch } from 'react-router-dom';
+import MoviesList from '../MoviesList/';
 
 import styles from './HomePage.module.css';
 
@@ -12,26 +12,15 @@ const HomePage = () => {
   console.log(url);
 
   useEffect(() => {
-    TrendingAPI.fetchTrending().then(setMovies);
+    TrendingAPI.fetchTrending().then(data => {
+      setMovies(data.results);
+    });
   }, []);
 
   return (
     <>
       <h2 className={styles.title}>Trending today</h2>
-      <ul className={styles.list}>
-        {movies &&
-          movies.results.map(({ id, title, poster_path, original_title }) => (
-            <li className={styles.item} key={id}>
-              <Link to={`/movies/${id}`}>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-                  alt={title ? title : original_title}
-                ></img>
-                <p>{title ? title : original_title}</p>
-              </Link>
-            </li>
-          ))}
-      </ul>
+      <MoviesList movies={movies} />
     </>
   );
 };

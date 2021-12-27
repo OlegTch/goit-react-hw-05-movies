@@ -15,7 +15,6 @@ const Searchbar = ({ onFormSubmit }) => {
   const handleSubmit = event => {
     event.preventDefault();
     if (searchQuery.trim() === '') {
-      console.log('event');
       toast.error('please, enter movies name');
       return;
     }
@@ -47,6 +46,7 @@ const Searchbar = ({ onFormSubmit }) => {
 
 Searchbar.propTypes = {
   searchQuery: PropTypes.string,
+  onFormSubmit: PropTypes.func,
 };
 
 export default Searchbar;

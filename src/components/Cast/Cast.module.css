@@ -11,9 +11,19 @@
 }
 
 .item {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 30px;
   margin-left: 30px;
-  flex-basis: calc((100% - 3 * 30px) / 3);
+  flex-basis: calc((100% - 6 * 30px) / 6);
   border: 2px solid #000000;
   height: 100%;
+}
+
+.thumb {
+  flex-grow: 1;
+}
+
+.image {
+  width: 100%;
 }

@@ -1,23 +1,42 @@
 import { useState, useEffect } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import * as MoviesSearchAPI from '../../services/movies-api';
 
 import Searchbar from '../Searchbar';
 import Loader from '../Loader';
+import MoviesList from '../MoviesList/';
 import styles from './MoviesPage.module.css';
 
-const MoviesPage = query => {
-  const [movies, setMovies] = useState('');
+const MoviesPage = () => {
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
-    MoviesSearchAPI.fetchMoviesSearch().then(setMovies);
-  }, []);
+    if (!query) {
+      return;
+    }
+    setIsLoading(true);
+    MoviesSearchAPI.fetchMoviesSearch(query)
+      .then(data => {
+        if (data.results.length === 0) {
+          return toast.error(`Invalid request name ${query}. Please try again`);
+        }
+        setMovies(data.results);
+      })
+      .catch(error => {
+        setError(error);
+      })
+      .finally(setIsLoading(false));
+  }, [query]);
 
-  const handleFormSubmit = searchQuery => {
-    setMovies(searchQuery);
+  const handleFormSubmit = query => {
+    setQuery(query);
+    setMovies(movies);
   };
 
   return (
@@ -25,22 +44,17 @@ const MoviesPage = query => {
       <p className={styles.text}>MoviesPage</p>
       <Searchbar onFormSubmit={handleFormSubmit} />
       <ToastContainer autoClose={2000} position="top-center" />
-      {/* {searchMovies && <>} */}
-      <ul className={styles.list}>
-        {movies &&
-          movies.results.map(({ id, title, poster_path, original_title }) => (
-            <li className={styles.item} key={id}>
-              <Link to={`/movies/${id}`}>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${poster_path}`}
-                  alt={title ? title : original_title}
-                ></img>
-                <p>{title ? title : original_title}</p>
-              </Link>
-            </li>
-          ))}
-      </ul>
+      {isLoading && <Loader />}
+      <MoviesList movies={movies} />
+      {error && <p>Something wrong</p>}
     </>
   );
 };
+
+MoviesPage.propTypes = {
+  isLoading: PropTypes.bool,
+  error: PropTypes.string,
+  query: PropTypes.string,
+};
+
 export default MoviesPage;
