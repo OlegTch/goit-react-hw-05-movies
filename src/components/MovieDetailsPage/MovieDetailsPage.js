@@ -26,9 +26,9 @@ const MovieDetailsPage = () => {
   const [movies, setMovies] = useState(null);
   const { url, path } = useRouteMatch();
   const [error, setError] = useState(null);
-  console.log('url', url);
-  console.log('path', path);
-  console.log(location);
+  // console.log('url', url);
+  // console.log('path', path);
+  // console.log(location);
 
   useEffect(() => {
     MovieDetailsAPI.fetchMovieDetails(movieId)
@@ -41,9 +41,6 @@ const MovieDetailsPage = () => {
   const onGoBack = () => {
     history.push(location?.state?.from ?? `/`);
     // history.push(location?.state?.from ?? `/movies`);
-
-    console.log(history);
-    console.log(location.state.from);
   };
 
   return (

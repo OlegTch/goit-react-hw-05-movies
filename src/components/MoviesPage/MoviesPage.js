@@ -9,7 +9,6 @@ import * as MoviesSearchAPI from '../../services/movies-api';
 import Searchbar from '../Searchbar';
 import Loader from '../Loader';
 import MoviesList from '../MoviesList/';
-import styles from './MoviesPage.module.css';
 
 const MoviesPage = () => {
   const location = useLocation();
@@ -17,11 +16,13 @@ const MoviesPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
+  console.log(location);
 
   useEffect(() => {
     if (!query) {
       return;
     }
+
     setIsLoading(true);
     MoviesSearchAPI.fetchMoviesSearch(query)
       .then(data => {
@@ -43,7 +44,6 @@ const MoviesPage = () => {
 
   return (
     <>
-      <p className={styles.text}>MoviesPage</p>
       <Searchbar onFormSubmit={handleFormSubmit} />
       <ToastContainer autoClose={2000} position="top-center" />
       {isLoading && <Loader />}
