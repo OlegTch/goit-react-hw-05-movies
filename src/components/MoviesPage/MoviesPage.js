@@ -17,6 +17,7 @@ const MoviesPage = () => {
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
   console.log(location);
+  const queryLocation = new URLSearchParams(location.search).get('query');
 
   useEffect(() => {
     if (!query) {
@@ -37,9 +38,19 @@ const MoviesPage = () => {
       .finally(setIsLoading(false));
   }, [query]);
 
+  useEffect(() => {
+    location.search !== '' &&
+      MoviesSearchAPI.fetchMoviesSearch(queryLocation)
+        .then(data => setMovies(data.results))
+        .catch(error => {
+          setError(error);
+        });
+  }, [location.search, queryLocation]);
+
   const handleFormSubmit = query => {
     setQuery(query);
     setMovies(movies);
+    location.search = `query=${query}`;
   };
 
   return (
